@@ -1,6 +1,7 @@
 """This file should have our order classes in it."""
 # PART 4 - random module used in get_base_price method in AbstractMelonOrder class
 from random import choice 
+from datetime import datetime
 
 #creating get base price method in abstract melon order class
 # import randchoice and it has to be between 5-9, which will be our base price
@@ -19,9 +20,36 @@ class AbstractMelonOrder(object):
         self.shipped = False
         self.tax = 0
 
+    def check_rush_hour_time(self):
+        #instantiating an object, taking the exact time/date of the moment
+        time_order_placed = datetime.today()
+        #finding the day of the week when the order was placed
+        weekday_of_order = time_order_placed.weekday()
+        #get the hour of when the order was placed
+        hour_of_order = time_order_placed.hour
+
+        #check if Monday - Friday
+        if weekday_of_order in range(0,5):
+            #check if between the hours of 8am - 11am
+            if hour_of_order in range(8,11):
+                #return yes in rush hour
+                return True
+        else:
+            #return no, not in rush hour
+            return False
+
     #method that finds a random integer from 5-9 and assigns it as the base price
     def get_base_price(self):
+        # save our output of "check_rush_hour_time" method
+        rush_hour_check = self.check_rush_hour_time()
+        #getting a random base_price choice from $5-9
         base_price = choice(range(5,10))
+
+        #if order placed during rush hour
+        if rush_hour_check == True:
+            #increment the base price by 4
+            base_price += 4
+
         return base_price
 
     #method that finds the total price
